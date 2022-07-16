@@ -49,25 +49,33 @@ public class CharacterController : MonoBehaviour
 	}
 	void OnCollisionEnter(Collision collision)
 	{
-		foreach (var contact in collision.contacts)
-		{
-			if (!contact.otherCollider.TryGetComponent<CharacterController>(out var controller)) return;
+        foreach (var contact in collision.contacts)
+        {
+            if (!contact.otherCollider.TryGetComponent<CharacterController>(out var controller)) return;
 
-			if (contact.otherCollider.TryGetComponent<EnemyAgent>(out var agent))
-			{
-				agent.ToggleAgent(false);
-			}
+            if (contact.otherCollider.TryGetComponent<EnemyAgent>(out var agent))
+            {
+                agent.ToggleAgent(false);
+            }
 
-			var rb = contact.otherCollider.GetComponent<Rigidbody>();
-			rb.AddForce(transform.forward * 500);
-		}
+            var rb = contact.otherCollider.GetComponent<Rigidbody>();
+            rb.AddForce(transform.forward * 500);
+        }
 
-	}
+  //      if (!collision.gameObject.TryGetComponent<CharacterController>(out var controller)) return;
 
-	#endregion
+		//Vector2 vector = collision.relativeVelocity;
+		//Debug.Log(vector);
 
-	#region methods
-	public void ChangeSide(CharacterSide newSide)
+
+
+
+    }
+
+    #endregion
+
+    #region methods
+    public void ChangeSide(CharacterSide newSide)
 	{
 		Side = newSide;
 		_diceRoll.Roll(Side);
