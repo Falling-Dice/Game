@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterDash))]
 public class CharacterController : MonoBehaviour
 {
 	#region variables
@@ -17,8 +19,10 @@ public class CharacterController : MonoBehaviour
 	public Vector3 Move { get; set; }
 	public Vector3 Aiming { get; set; }
 	public Rigidbody Rigibody { get; private set; }
+	public CharacterDash CharacterDash { get; private set; }
 
 	private Vector3 desiredSize;
+	private bool canDash = true;
 	#endregion
 
 
@@ -27,6 +31,7 @@ public class CharacterController : MonoBehaviour
 	{
 		// components
 		Rigibody = GetComponent<Rigidbody>();
+		CharacterDash = GetComponent<CharacterDash>();
 	}
 
 	void Start()
@@ -49,19 +54,17 @@ public class CharacterController : MonoBehaviour
 	}
 	void OnCollisionEnter(Collision collision)
 	{
-		foreach (var contact in collision.contacts)
-		{
-			if (!contact.otherCollider.TryGetComponent<CharacterController>(out var controller)) return;
+		if (!collision.gameObject.TryGetComponent<CharacterController>(out var controller)) return;
 
-			if (contact.otherCollider.TryGetComponent<EnemyAgent>(out var agent))
-			{
-				agent.ToggleAgent(false);
-			}
+		// if (collision.gameObject.TryGetComponent<EnemyAgent>(out var agent))
+		// {
+		// 	agent.ToggleAgent(false);
+		// 	Debug.Log(collision.relativeVelocity);
+		// 	var rb = collision.gameObject.GetComponent<Rigidbody>();
+		// 	rb.AddForce(-collision.relativeVelocity * 150);
+		// }
 
-			var rb = contact.otherCollider.GetComponent<Rigidbody>();
-			rb.AddForce(transform.forward * 500);
-		}
-
+		Rigibody.AddForce(collision.relativeVelocity * 50);
 	}
 
 	#endregion
@@ -73,6 +76,17 @@ public class CharacterController : MonoBehaviour
 		_diceRoll.Roll(Side);
 		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
 		Rigibody.mass = Side.Size;
+	}
+
+	public void Dash()
+	{
+		if (!canDash)
+			return;
+
+		canDash = false;
+		CharacterDash.Dash(Side);
+		var time = .4f * Side.Size + .5f;
+		StartCoroutine(WhenDashEnd(time));
 	}
 	#endregion
 
@@ -91,6 +105,13 @@ public class CharacterController : MonoBehaviour
 	private void HandleMove(Vector3 movePosition)
 	{
 		Rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
+	}
+
+	private IEnumerator WhenDashEnd(float timeWait)
+	{
+		yield return new WaitForSeconds(timeWait);
+		ChangeSide(CharacterSide.All.PickRandom());
+		canDash = true;
 	}
 	#endregion
 }

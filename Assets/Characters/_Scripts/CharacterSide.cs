@@ -16,12 +16,12 @@ public class CharacterSide
 	}
 
 
-	public static CharacterSide One = new(new Vector3(0, 0, -90), 1, 1f);
-	public static CharacterSide Two = new(new Vector3(0, 0, -180), 2, 1.2f);
-	public static CharacterSide Three = new(new Vector3(0, 0, -270), 3, 1.4f);
-	public static CharacterSide Four = new(new Vector3(0, 0, -360), 4, 1.6f);
-	public static CharacterSide Five = new(new Vector3(-90, 0, 0), 5, 1.8f);
-	public static CharacterSide Six = new(new Vector3(90, 0, 0), 6, 2);
+	public static CharacterSide One = new(new Vector3(0, 0, -90), 2, 1f);
+	public static CharacterSide Two = new(new Vector3(0, 0, -180), 3, 1.2f);
+	public static CharacterSide Three = new(new Vector3(0, 0, -270), 4, 1.4f);
+	public static CharacterSide Four = new(new Vector3(0, 0, -360), 5, 1.6f);
+	public static CharacterSide Five = new(new Vector3(-90, 0, 0), 6, 1.8f);
+	public static CharacterSide Six = new(new Vector3(90, 0, 0), 7, 2);
 
 	public static List<CharacterSide> All = new List<CharacterSide>(){
 		One,
