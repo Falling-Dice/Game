@@ -66,51 +66,59 @@ public class CharacterController : MonoBehaviour
 		Rigibody.AddForce(collision.relativeVelocity * 50);
 	}
 
-	#endregion
+	//Vector2 vector = collision.relativeVelocity;
+	//Debug.Log(vector);
 
-	#region methods
-	public void ChangeSide(CharacterSide newSide)
-	{
-		Side = newSide;
-		_diceRoll.Roll(Side);
-		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
-		Rigibody.mass = Side.Size;
-	}
 
-	public void Dash()
-	{
-		if (!canDash)
-			return;
 
-		canDash = false;
-		CharacterDash.Dash(Side);
-		var time = .4f * Side.Size + .5f;
-		StartCoroutine(WhenDashing(time));
-	}
-	#endregion
 
-	#region privates	
-	private void HandleAiming(Vector3 aimingPosition)
-	{
-		aimingPosition.y = transform.position.y;
-		var rotation = Quaternion.LookRotation(aimingPosition - transform.position);
-		LookAt(rotation);
+}
 
-		// methods
-		void LookAt(Quaternion rotation)
-			=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Side.RotationSpeed * Time.deltaTime);
-	}
+#endregion
 
-	private void HandleMove(Vector3 movePosition)
-	{
-		Rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
-	}
+#region methods
+public void ChangeSide(CharacterSide newSide)
+{
+	Side = newSide;
+	_diceRoll.Roll(Side);
+	desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
+	Rigibody.mass = Side.Size;
+}
 
-	private IEnumerator WhenDashing(float timeWait)
-	{
-		yield return new WaitForSeconds(timeWait);
-		ChangeSide(CharacterSide.All.PickRandom());
-		canDash = true;
-	}
+public void Dash()
+{
+	if (!canDash)
+		return;
+
+	canDash = false;
+	CharacterDash.Dash(Side);
+	var time = .4f * Side.Size + .5f;
+	StartCoroutine(WhenDashing(time));
+}
+#endregion
+
+#region privates	
+private void HandleAiming(Vector3 aimingPosition)
+{
+	aimingPosition.y = transform.position.y;
+	var rotation = Quaternion.LookRotation(aimingPosition - transform.position);
+	LookAt(rotation);
+
+	// methods
+	void LookAt(Quaternion rotation)
+		=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Side.RotationSpeed * Time.deltaTime);
+}
+
+private void HandleMove(Vector3 movePosition)
+{
+	Rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
+}
+
+private IEnumerator WhenDashing(float timeWait)
+{
+	yield return new WaitForSeconds(timeWait);
+	ChangeSide(CharacterSide.All.PickRandom());
+	canDash = true;
+}
 	#endregion
 }
