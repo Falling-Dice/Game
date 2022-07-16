@@ -1,4 +1,6 @@
 
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterSide
@@ -18,4 +20,13 @@ public class CharacterSide
 	public static CharacterSide Four = new(new Vector3(0, 0, -360), 4);
 	public static CharacterSide Five = new(new Vector3(-90, 0, 0), 5);
 	public static CharacterSide Six = new(new Vector3(90, 0, 0), 6);
+
+	public static List<CharacterSide> All = new List<CharacterSide>(){
+		One,
+		Two,
+		Three,
+		Four,
+		Five,
+		Six
+	};
 }

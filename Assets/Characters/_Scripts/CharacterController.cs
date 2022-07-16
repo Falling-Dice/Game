@@ -6,6 +6,7 @@ public class CharacterController : MonoBehaviour
 	#region variables
 	[SerializeField] private float _moveSpeed = 5f;
 	[SerializeField] private float _lookSpeed = 5f;
+	[SerializeField] private DiceRoll _diceRoll;
 	#endregion
 
 	#region data
@@ -35,6 +36,14 @@ public class CharacterController : MonoBehaviour
 	#endregion
 
 	#region methods
+	public void ChangeSide(CharacterSide newSide)
+	{
+		Side = newSide;
+		_diceRoll.Roll(Side);
+	}
+	#endregion
+
+	#region privates	
 	private void HandleAiming(Vector3 aimingPosition)
 	{
 		aimingPosition.y = transform.position.y;

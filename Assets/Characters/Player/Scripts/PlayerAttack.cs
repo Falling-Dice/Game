@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,7 @@ public class PlayerAttack : MonoBehaviour
 {
 	#region properties
 	public CharacterDash CharacterDash { get; private set; }
+	public CharacterController Controller { get; private set; }
 	#endregion
 
 
@@ -15,6 +17,7 @@ public class PlayerAttack : MonoBehaviour
 	{
 		// components
 		CharacterDash = GetComponent<CharacterDash>();
+		Controller = GetComponent<CharacterController>();
 	}
 	#endregion
 
@@ -23,6 +26,9 @@ public class PlayerAttack : MonoBehaviour
 	{
 		if (!context.performed) return;
 		CharacterDash.Dash();
+
+		var randomIndex = Random.Range(1, (CharacterSide.All.Count() - 1));
+		Controller.ChangeSide(CharacterSide.All[randomIndex]);
 	}
 	#endregion
 }

@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		var input = context.ReadValue<Vector2>();
 		var ray = Helpers.Camera.ScreenPointToRay(input);
-		if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask) || hit.collider.isTrigger)
+		if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask))
 			return;
 
 		controller.Aiming = hit.point;
