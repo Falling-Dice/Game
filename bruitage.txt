@@ -1,0 +1,10 @@
+kill : 26
+bruitage chute : 06
+
+changement de taille : 31
+changement de face : 21
+collision : 32
+
+dash : 07
+win : 18
+lose : 36
