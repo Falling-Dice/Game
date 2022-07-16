@@ -25,7 +25,7 @@ public class PlayerAttack : MonoBehaviour
 	public void Attack(InputAction.CallbackContext context)
 	{
 		if (!context.performed) return;
-		CharacterDash.Dash();
+		CharacterDash.Dash(Controller.Side);
 
 		Controller.ChangeSide(CharacterSide.All.PickRandom());
 	}

@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterController : MonoBehaviour
 {
@@ -14,8 +16,8 @@ public class CharacterController : MonoBehaviour
 	public CharacterSide Side { get; private set; }
 	public Vector3 Move { get; set; }
 	public Vector3 Aiming { get; set; }
+	public Rigidbody Rigibody { get; private set; }
 
-	private Rigidbody rigibody;
 	private Vector3 desiredSize;
 	#endregion
 
@@ -24,7 +26,7 @@ public class CharacterController : MonoBehaviour
 	void Awake()
 	{
 		// components
-		rigibody = GetComponent<Rigidbody>();
+		Rigibody = GetComponent<Rigidbody>();
 	}
 
 	void Start()
@@ -45,6 +47,23 @@ public class CharacterController : MonoBehaviour
 		if (Aiming != Vector3.zero)
 			HandleAiming(Aiming);
 	}
+	void OnCollisionEnter(Collision collision)
+	{
+		foreach (var contact in collision.contacts)
+		{
+			if (!contact.otherCollider.TryGetComponent<CharacterController>(out var controller)) return;
+
+			if (contact.otherCollider.TryGetComponent<EnemyAgent>(out var agent))
+			{
+				agent.ToggleAgent(false);
+			}
+
+			var rb = contact.otherCollider.GetComponent<Rigidbody>();
+			rb.AddForce(transform.forward * 500);
+		}
+
+	}
+
 	#endregion
 
 	#region methods
@@ -53,7 +72,7 @@ public class CharacterController : MonoBehaviour
 		Side = newSide;
 		_diceRoll.Roll(Side);
 		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
-		rigibody.mass = Side.Size;
+		Rigibody.mass = Side.Size;
 	}
 	#endregion
 
@@ -71,7 +90,7 @@ public class CharacterController : MonoBehaviour
 
 	private void HandleMove(Vector3 movePosition)
 	{
-		rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
+		Rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
 	}
 	#endregion
 }
