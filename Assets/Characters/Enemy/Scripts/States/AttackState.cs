@@ -22,6 +22,8 @@ public class AttackState : EnemyStateBase
 	public override void Update()
 	{
 		Agent.Controller.Dash();
+
+		CheckDistance();
 	}
 
 	public override void Exit()
@@ -36,7 +38,7 @@ public class AttackState : EnemyStateBase
 		if (Time.time < timeBeforeCheckDistance) return;
 		timeBeforeCheckDistance = Time.time + durationBeforeCheckDistance;
 
-		if (Agent.Controller.Side.Range <= Vector3.Distance(Agent.transform.position, GameManager.Instance.Player.position)) return;
+		if (Vector3.Distance(Agent.transform.position, GameManager.Instance.Player.position) <= Agent.Controller.Side.Range) return;
 		Agent.StateMachine.ChangeState(new FollowPlayerState());
 	}
 	#endregion

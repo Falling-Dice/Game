@@ -12,14 +12,11 @@ public class FollowPlayerState : EnemyStateBase
 	private float timeBeforeCheckDistance;
 	#endregion
 
-	public FollowPlayerState()
-	{
-		position = GameManager.Instance.Player.transform.position;
-	}
 
 	#region implements 
 	public override void Enter()
 	{
+		position = GameManager.Instance.Player.transform.position;
 	}
 
 	public override void Update()
@@ -54,7 +51,7 @@ public class FollowPlayerState : EnemyStateBase
 		if (Time.time < timeBeforeCheckDistance) return;
 		timeBeforeCheckDistance = Time.time + durationBeforeCheckDistance;
 
-		if (Agent.Controller.Side.Range > Vector3.Distance(Agent.transform.position, GameManager.Instance.Player.position)) return;
+		if (Vector3.Distance(Agent.transform.position, GameManager.Instance.Player.position) > Agent.Controller.Side.Range) return;
 
 		Agent.StateMachine.ChangeState(new AttackState());
 	}
