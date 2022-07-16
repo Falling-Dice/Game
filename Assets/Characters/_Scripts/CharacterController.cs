@@ -9,7 +9,6 @@ public class CharacterController : MonoBehaviour
 {
 	#region variables
 	[SerializeField] private float _moveSpeed = 5f;
-	[SerializeField] private float _lookSpeed = 5f;
 	[SerializeField] private DiceRoll _diceRoll;
 	[SerializeField] private float _changeSizeSpeed = 10f;
 	#endregion
@@ -86,7 +85,7 @@ public class CharacterController : MonoBehaviour
 		canDash = false;
 		CharacterDash.Dash(Side);
 		var time = .4f * Side.Size + .5f;
-		StartCoroutine(WhenDashEnd(time));
+		StartCoroutine(WhenDashing(time));
 	}
 	#endregion
 
@@ -99,7 +98,7 @@ public class CharacterController : MonoBehaviour
 
 		// methods
 		void LookAt(Quaternion rotation)
-			=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _lookSpeed * Time.deltaTime);
+			=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Side.RotationSpeed * Time.deltaTime);
 	}
 
 	private void HandleMove(Vector3 movePosition)
@@ -107,7 +106,7 @@ public class CharacterController : MonoBehaviour
 		Rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
 	}
 
-	private IEnumerator WhenDashEnd(float timeWait)
+	private IEnumerator WhenDashing(float timeWait)
 	{
 		yield return new WaitForSeconds(timeWait);
 		ChangeSide(CharacterSide.All.PickRandom());

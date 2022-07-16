@@ -7,6 +7,9 @@ public class FollowPlayerState : EnemyStateBase
 	#region data
 	private float timerUpdatePosition = .4f;
 	private Vector3 position;
+
+	private float durationBeforeCheckDistance = .25f;
+	private float timeBeforeCheckDistance;
 	#endregion
 
 	public FollowPlayerState()
@@ -22,12 +25,16 @@ public class FollowPlayerState : EnemyStateBase
 	public override void Update()
 	{
 		UpdatePosition();
+		CheckDistance();
 	}
 
 	public override void Exit()
 	{
-		Agent.NavMeshAgent.isStopped = true;
-		Agent.NavMeshAgent.ResetPath();
+		if (Agent.NavMeshAgent.enabled)
+		{
+			Agent.NavMeshAgent.isStopped = true;
+			Agent.NavMeshAgent.ResetPath();
+		}
 	}
 	#endregion
 
@@ -40,6 +47,16 @@ public class FollowPlayerState : EnemyStateBase
 
 		if (Agent.NavMeshAgent.enabled)
 			Agent.NavMeshAgent.SetDestination(GameManager.Instance.Player.transform.position);
+	}
+
+	private void CheckDistance()
+	{
+		if (Time.time < timeBeforeCheckDistance) return;
+		timeBeforeCheckDistance = Time.time + durationBeforeCheckDistance;
+
+		if (Agent.Controller.Side.Range > Vector3.Distance(Agent.transform.position, GameManager.Instance.Player.position)) return;
+
+		Agent.StateMachine.ChangeState(new AttackState());
 	}
 	#endregion
 }
