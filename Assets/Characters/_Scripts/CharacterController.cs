@@ -11,6 +11,7 @@ public class CharacterController : MonoBehaviour
 	[SerializeField] private float _moveSpeed = 5f;
 	[SerializeField] private DiceRoll _diceRoll;
 	[SerializeField] private float _changeSizeSpeed = 10f;
+
 	#endregion
 
 	#region data
@@ -22,6 +23,9 @@ public class CharacterController : MonoBehaviour
 
 	private Vector3 desiredSize;
 	private bool canDash = true;
+
+	public Transform zone;
+
 	#endregion
 
 
@@ -78,6 +82,13 @@ public class CharacterController : MonoBehaviour
 		_diceRoll.Roll(Side);
 		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
 		Rigibody.mass = Side.Size;
+		this.zone.localScale = new Vector3(Side.Range, Side.Range, zone.localScale.z);
+		Color newColor;
+		ColorUtility.TryParseHtmlString(Side.Color, out newColor);
+		Debug.Log(newColor);
+		this.zone.GetComponent<Renderer>().material.color = newColor;
+		//this.Zone.GetComponent<MeshRenderer>().material = new Material(Shader.Find());
+
 	}
 
 	public void Dash()
