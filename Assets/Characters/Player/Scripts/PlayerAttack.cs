@@ -27,8 +27,7 @@ public class PlayerAttack : MonoBehaviour
 		if (!context.performed) return;
 		CharacterDash.Dash();
 
-		var randomIndex = Random.Range(1, (CharacterSide.All.Count() - 1));
-		Controller.ChangeSide(CharacterSide.All[randomIndex]);
+		Controller.ChangeSide(CharacterSide.All.PickRandom());
 	}
 	#endregion
 }

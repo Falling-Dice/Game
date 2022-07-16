@@ -7,6 +7,7 @@ public class CharacterController : MonoBehaviour
 	[SerializeField] private float _moveSpeed = 5f;
 	[SerializeField] private float _lookSpeed = 5f;
 	[SerializeField] private DiceRoll _diceRoll;
+	[SerializeField] private float _changeSizeSpeed = 10f;
 	#endregion
 
 	#region data
@@ -15,6 +16,7 @@ public class CharacterController : MonoBehaviour
 	public Vector3 Aiming { get; set; }
 
 	private Rigidbody rigibody;
+	private Vector3 desiredSize;
 	#endregion
 
 
@@ -23,6 +25,16 @@ public class CharacterController : MonoBehaviour
 	{
 		// components
 		rigibody = GetComponent<Rigidbody>();
+	}
+
+	void Start()
+	{
+		ChangeSide(CharacterSide.All.PickRandom());
+	}
+
+	void Update()
+	{
+		transform.localScale = Vector3.Lerp(transform.localScale, desiredSize, Time.deltaTime * _changeSizeSpeed);
 	}
 
 	void FixedUpdate()
@@ -40,6 +52,8 @@ public class CharacterController : MonoBehaviour
 	{
 		Side = newSide;
 		_diceRoll.Roll(Side);
+		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
+		rigibody.mass = Side.Size;
 	}
 	#endregion
 

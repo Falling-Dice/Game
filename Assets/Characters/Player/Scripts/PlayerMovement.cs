@@ -8,8 +8,6 @@ public class PlayerMovement : MonoBehaviour
 {
 	#region variables
 	[SerializeField] private LayerMask _aimLayerMask;
-	[SerializeField] private float _moveSpeed = 5f;
-	[SerializeField] private float _lookSpeed = 5f;
 	#endregion
 
 	#region data
