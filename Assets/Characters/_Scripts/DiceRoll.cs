@@ -18,8 +18,8 @@ public class DiceRoll : MonoBehaviour
 	#region unity events
 	private void Update()
 	{
-		var desiredRotation = Quaternion.Euler(rotationDestination);
-		_objectToRotate.rotation = Quaternion.Lerp(_objectToRotate.rotation, desiredRotation, Time.deltaTime * _rotateSpeed);
+		// var desiredRotation = Quaternion.Euler(rotationDestination);
+		// _objectToRotate.rotation = Quaternion.Lerp(_objectToRotate.rotation, desiredRotation, Time.deltaTime * _rotateSpeed);
 	}
 	#endregion
 
