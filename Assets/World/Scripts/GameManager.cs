@@ -4,6 +4,7 @@ public class GameManager : MonoBehaviour
 {
 	#region data
 	[SerializeField] private Transform _player;
+	[SerializeField] private Transform[] _enemiesSpawn;
 	#endregion
 
 	#region singleton
