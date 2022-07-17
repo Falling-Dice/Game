@@ -27,7 +27,8 @@ public class AttackState : EnemyStateBase
 		else
 		{
 			var towards = (GameManager.Instance.Player.position - Agent.transform.position).normalized;
-			var rotation = Quaternion.LookRotation(towards);
+
+			var rotation = Quaternion.LookRotation(towards.ResetY());
 			Agent.Controller.SetAiming(rotation, Agent.Controller.Side.RotationSpeed);
 		}
 
