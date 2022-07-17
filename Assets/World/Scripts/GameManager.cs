@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
 	#region data
-	[SerializeField] private AudioSource _mainAudioSource;
+	[SerializeField] private AudioSource _mainEffectAudioSource;
 	[SerializeField] private Transform _playerSpawn;
 	[SerializeField] private CameraFollow _cameraFollow;
 	[SerializeField] private PlayerMovement _player;
@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
 	public Transform Player
 		=> player;
 	public AudioSource MainAudioSource
-		=> _mainAudioSource;
+		=> _mainEffectAudioSource;
 	public int Score { get; set; }
 	#endregion
 
