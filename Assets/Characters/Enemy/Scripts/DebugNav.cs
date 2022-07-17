@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(EnemyAgent))]
 public class DebugNav : MonoBehaviour
 {
-	private NavMeshAgent agent;
+	private EnemyAgent agent;
 
 	void Awake()
 	{
-		agent = GetComponent<NavMeshAgent>();
+		agent = GetComponent<EnemyAgent>();
 	}
 
 	void OnDrawGizmos()
@@ -15,22 +16,8 @@ public class DebugNav : MonoBehaviour
 		if (!agent)
 			return;
 
-		// var path = agent.path;
-		// var previousCorner = transform.position;
 
-		// Gizmos.color = Color.red;
-		// foreach (var corner in path.corners)
-		// {
-		// 	Gizmos.DrawLine(previousCorner, corner);
-		// 	Gizmos.DrawSphere(corner, 0.1f);
-
-		// 	previousCorner = corner;
-		// }
-
-
-
-		var path = new NavMeshPath();
-		NavMesh.CalculatePath(transform.position, agent.destination, NavMesh.AllAreas, path);
+		var path = agent.NavPath;
 		var previousCorner = transform.position;
 
 		Gizmos.color = Color.red;

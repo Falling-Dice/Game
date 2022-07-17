@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FollowPlayerState : EnemyStateBase
 {
@@ -17,6 +18,7 @@ public class FollowPlayerState : EnemyStateBase
 	public override void Enter()
 	{
 		position = GameManager.Instance.Player.transform.position;
+		Agent.IsMoving = true;
 	}
 
 	public override void Update()
@@ -27,11 +29,8 @@ public class FollowPlayerState : EnemyStateBase
 
 	public override void Exit()
 	{
-		if (Agent.NavMeshAgent.enabled)
-		{
-			Agent.NavMeshAgent.isStopped = true;
-			Agent.NavMeshAgent.ResetPath();
-		}
+		Agent.NavPath.ClearCorners();
+		Agent.IsMoving = false;
 	}
 	#endregion
 
@@ -42,8 +41,7 @@ public class FollowPlayerState : EnemyStateBase
 		if (timerUpdatePosition >= 0)
 			return;
 
-		if (Agent.NavMeshAgent.enabled)
-			Agent.NavMeshAgent.SetDestination(GameManager.Instance.Player.transform.position);
+		NavMesh.CalculatePath(Agent.transform.position, GameManager.Instance.Player.position, NavMesh.AllAreas, Agent.NavPath);
 	}
 
 	private void CheckDistance()

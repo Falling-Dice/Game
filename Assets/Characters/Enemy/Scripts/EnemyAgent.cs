@@ -3,23 +3,21 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAgent : MonoBehaviour
 {
 	#region variables
+	[SerializeField] private float _speed = 3.5f;
+	[SerializeField] private float _minMagnitudeBeforeNextCorner = .5f;
 	#endregion
 
 	#region data
-	public NavMeshAgent NavMeshAgent { get; private set; }
 	public CharacterController Controller { get; private set; }
 
 	public EnemyStateMachine StateMachine { get; private set; }
 	public bool IsPlayerInRange { get; private set; }
 
-	public float NextTimeCheckVelocity { get; set; }
 	public bool IsMoving { get; set; }
-
-	private float minMagnitudeBeforeNextCorner = .45f;
+	public NavMeshPath NavPath { get; private set; }
 	#endregion
 
 
@@ -28,13 +26,11 @@ public class EnemyAgent : MonoBehaviour
 	{
 		// components
 		Controller = GetComponent<CharacterController>();
-		NavMeshAgent = GetComponent<NavMeshAgent>();
 
 		StateMachine = new EnemyStateMachine(this, new FollowPlayerState());
 
-		// config
-		NavMeshAgent.updatePosition = false;
-		NavMeshAgent.Stop(true);
+		// config 
+		NavPath = new NavMeshPath();
 	}
 
 	void Update()
@@ -44,28 +40,25 @@ public class EnemyAgent : MonoBehaviour
 
 	void LateUpdate()
 	{
-		if (Time.time > NextTimeCheckVelocity)
-		{
-			ToggleAgent(true);
-		}
 	}
 
 	void FixedUpdate()
 	{
-		// var path = NavMeshAgent.path;
+		if (!IsMoving)
+			return;
 
-		var path = new NavMeshPath();
-		NavMesh.CalculatePath(transform.position, GameManager.Instance.Player.position, NavMesh.AllAreas, path);
+		if (!NavPath.corners.Any()) return;
 
-		if (!path.corners.Any()) return;
-
-		var towards = GetNextTowardsPosition(path.corners);
+		var towards = GetNextTowardsPosition(NavPath.corners);
 
 		if (towards == Vector3.zero)
 			return;
 
-		var destination = towards * NavMeshAgent.speed * Time.deltaTime;
+		var destination = towards * _speed * Time.deltaTime;
 		Controller.Rigibody.MovePosition(transform.position + destination);
+
+		var lookAt = Quaternion.LookRotation(towards);
+		transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, Time.deltaTime * Controller.Side.RotationSpeed);
 
 		// var destination = NavMeshAgent.nextPosition.ResetY(transform.position.y);
 		// Controller.Rigibody.MovePosition(destination);
@@ -87,34 +80,17 @@ public class EnemyAgent : MonoBehaviour
 	}
 	#endregion
 
-	#region methods
-	public void ToggleAgent(bool toggle)
-	{
-		// Controller.Rigibody.isKinematic = toggle;
-		// NavMeshAgent.enabled = toggle;
-
-		// if (!toggle)
-		// {
-		// 	NextTimeCheckVelocity = Time.time + .5f;
-		// }
-		// else
-		// {
-		// 	NavMeshAgent.nextPosition = Controller.Rigibody.position;
-		// }
-	}
-	#endregion
-
 	#region privates
 	private Vector3 GetNextTowardsPosition(Vector3[] corners)
 	{
 		for (var i = 0; i < corners.Length; i++)
 		{
 			var target = corners[i];
-			var towards = (target - transform.position).normalized;
-			var magnitude = towards.ResetY(immutable: true).magnitude;
+			var towards = (target - transform.position).normalized.ResetY();
+			// var magnitude = towards.ResetY(immutable: true).magnitude;
 
-			if (magnitude > minMagnitudeBeforeNextCorner)
-				return towards.ResetY(0);
+			if (towards.magnitude > _minMagnitudeBeforeNextCorner)
+				return towards;
 		}
 
 		return Vector3.zero;

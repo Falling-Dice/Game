@@ -17,9 +17,10 @@ public class CharacterController : MonoBehaviour
 	#region data
 	public CharacterSide Side { get; private set; }
 	public Vector3 Move { get; set; }
-	public Vector3 Aiming { get; private set; }
+	public Quaternion Aiming { get; private set; }
 	public Rigidbody Rigibody { get; private set; }
 	public CharacterDash CharacterDash { get; private set; }
+	public DiceRoll DiceRoll { get; private set; }
 	public bool IsDashing { get; private set; }
 
 	private Vector3 desiredSize;
@@ -32,6 +33,8 @@ public class CharacterController : MonoBehaviour
 		// components
 		Rigibody = GetComponent<Rigidbody>();
 		CharacterDash = GetComponent<CharacterDash>();
+
+		DiceRoll = _diceRoll;
 	}
 
 	void Start()
@@ -49,27 +52,23 @@ public class CharacterController : MonoBehaviour
 		if (Move != Vector3.zero)
 			HandleMove(Move);
 
-		if (Aiming != Vector3.zero)
+		if (Aiming != Quaternion.identity)
 			HandleAiming(Aiming);
 	}
 	void OnCollisionEnter(Collision collision)
 	{
 		if (!IsDashing || !collision.gameObject.TryGetComponent<CharacterController>(out var controller)) return;
 
-		var agent = collision.gameObject.GetComponent<EnemyAgent>();
-		if (agent != null)
-			agent.ToggleAgent(false);
-
 		var direction = collision.contacts[0].point - controller.transform.position;
-		var force = -direction.normalized;
-		force.y = 0;
+		var force = -direction.normalized.ResetY();
 		controller.Rigibody.AddForce(force * Rigibody.velocity.magnitude * 2, ForceMode.Impulse);
-		// var time = .4f * Side.Size + .5f;
+
+		controller.DiceRoll.Roll(CharacterSide.All.PickRandom());
 	}
 	#endregion
 
 	#region methods
-	public void SetAiming(Vector3 aiming, float? lookSpeed = null)
+	public void SetAiming(Quaternion aiming, float? lookSpeed = null)
 	{
 		Aiming = aiming;
 		_lookSpeed = lookSpeed ?? _lookSpeed;
@@ -78,7 +77,7 @@ public class CharacterController : MonoBehaviour
 	public void ChangeSide(CharacterSide newSide)
 	{
 		Side = newSide;
-		_diceRoll.Roll(Side);
+		DiceRoll.Roll(Side);
 		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
 		Rigibody.mass = Side.Size;
 
@@ -99,20 +98,14 @@ public class CharacterController : MonoBehaviour
 	#endregion
 
 	#region privates	
-	private void HandleAiming(Vector3 aimingPosition)
+	private void HandleAiming(Quaternion aimingRotation)
 	{
-		aimingPosition.y = transform.position.y;
-		var rotation = Quaternion.LookRotation(aimingPosition - transform.position);
-		LookAt(rotation);
-
-		// methods
-		void LookAt(Quaternion rotation)
-			=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _lookSpeed * Time.deltaTime);
+		transform.rotation = Quaternion.Slerp(transform.rotation, aimingRotation, _lookSpeed * Time.deltaTime);
 	}
 
 	private void HandleMove(Vector3 movePosition)
 	{
-		Rigibody.MovePosition(transform.position + movePosition * Time.deltaTime * _moveSpeed);
+		Rigibody.MovePosition(transform.position + Helpers.GetVectorFromCameraPivot(movePosition) * Time.deltaTime * _moveSpeed);
 	}
 
 	private IEnumerator WhenDashing(float timeWait)

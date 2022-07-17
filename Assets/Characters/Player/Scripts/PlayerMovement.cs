@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
 	#region variables
@@ -11,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
 	#endregion
 
 	#region data
+	private PlayerInput Input { get; set; }
 	private CharacterController controller;
 	#endregion
 
@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		// components
 		controller = GetComponent<CharacterController>();
+		Input = GetComponent<PlayerInput>();
 	}
 	#endregion
 
@@ -32,11 +33,27 @@ public class PlayerMovement : MonoBehaviour
 	public void Aiming(InputAction.CallbackContext context)
 	{
 		var input = context.ReadValue<Vector2>();
-		var ray = Helpers.Camera.ScreenPointToRay(input);
-		if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask))
-			return;
 
-		controller.SetAiming(hit.point);
+		if (Input.currentControlScheme == "Gamepad")
+		{
+			var direction = Vector3.right * input.x + Vector3.forward * input.y;
+			if (direction.sqrMagnitude > 0.0f)
+			{
+				var rotation = Quaternion.LookRotation(Helpers.GetVectorFromCameraPivot(direction), Vector3.up);
+				controller.SetAiming(rotation);
+			}
+		}
+		else
+		{
+			var ray = Helpers.Camera.ScreenPointToRay(input);
+			if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask))
+				return;
+
+			var aiming = hit.point;
+			aiming.y = transform.position.y;
+			var rotation = Quaternion.LookRotation(aiming - transform.position);
+			controller.SetAiming(rotation);
+		}
 	}
 	#endregion
 }
