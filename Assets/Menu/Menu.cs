@@ -13,7 +13,6 @@ public class Menu : MonoBehaviour
 	{
 
 		playButton.GetComponent<Button>().onClick.AddListener(loadLevel);
-		playButton.GetComponent<Button>().OnSelect()
 		exitButton.GetComponent<Button>().onClick.AddListener(ExitGame);
 
 	}
@@ -47,7 +46,7 @@ public class Menu : MonoBehaviour
 	}
 
 	public void selectSound()
-    {
+	{
 		buttonSelectSound.Play();
 
 	}
