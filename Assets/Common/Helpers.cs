@@ -58,6 +58,12 @@ public static class Helpers
 		vector.y = y;
 		return vector;
 	}
+
+	public static void ResetCamera()
+	{
+		_cameraPivot = null;
+		_camera = null;
+	}
 	#endregion
 
 	#region privates

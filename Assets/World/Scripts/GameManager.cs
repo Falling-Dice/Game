@@ -7,7 +7,9 @@ public class GameManager : MonoBehaviour
 {
 	#region data
 	[SerializeField] private AudioSource _mainAudioSource;
-	[SerializeField] private Transform _player;
+	[SerializeField] private Transform _playerSpawn;
+	[SerializeField] private CameraFollow _cameraFollow;
+	[SerializeField] private PlayerMovement _player;
 	[SerializeField] private int numberEnemies;
 	[SerializeField] private EnemyAgent _enemyPrefab;
 	[SerializeField] private Transform[] _enemiesSpawn;
@@ -21,6 +23,7 @@ public class GameManager : MonoBehaviour
 
 
 	#endregion
+	private Transform player;
 
 	#region singleton
 	private static GameManager _instance;
@@ -47,6 +50,11 @@ public class GameManager : MonoBehaviour
 	#region unity events
 	void Start()
 	{
+		Helpers.ResetCamera();
+
+		player = Instantiate(_player, _playerSpawn.position, _playerSpawn.rotation).transform;
+		_cameraFollow.SetTarget(player);
+
 		for (var i = 0; i < numberEnemies; i++)
 		{
 			SpawnEnemy();
@@ -56,7 +64,7 @@ public class GameManager : MonoBehaviour
 
 	#region properties
 	public Transform Player
-		=> _player;
+		=> player;
 	public AudioSource MainAudioSource
 		=> _mainAudioSource;
 	public int Score { get; set; }
@@ -85,7 +93,6 @@ public class GameManager : MonoBehaviour
 	#region privates
 	private void SpawnEnemy()
 	{
-
 		var spawn = _enemiesSpawn.ToList().PickRandom();
 		Instantiate(_enemyPrefab, spawn.position, spawn.rotation);
 	}
