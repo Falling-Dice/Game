@@ -36,7 +36,11 @@ public static class Helpers
 		=> GetMatrixFromCameraPivotAngle().MultiplyPoint3x4(input);
 
 	public static Vector3 GetVectorFromCameraPivot(Vector3 vector)
-		=> Quaternion.Euler(0, CameraPivotAngle, 0) * vector;
+	{
+		if(Camera == null) return Vector3.zero;
+		return Quaternion.Euler(0, CameraPivotAngle, 0) * vector;
+	}
+	
 
 	public static float Modulo(float value, float max)
 		=> (value % max + max) % max;

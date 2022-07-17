@@ -47,6 +47,9 @@ public class GameManager : MonoBehaviour
 		{
 			SpawnEnemy();
 		}
+
+		//Player.GetComponent<PlayerMovement>().Input.ActivateInput();
+
 	}
 	#endregion
 
@@ -71,7 +74,9 @@ public class GameManager : MonoBehaviour
 		else
 		{
 			Debug.Log("tombé");
-			this._gameOverController.showGameOver();
+            Player.GetComponent<PlayerMovement>().Input.DeactivateInput();
+            this._gameOverController.showGameOver();
+
 		}
 	}
 	#endregion

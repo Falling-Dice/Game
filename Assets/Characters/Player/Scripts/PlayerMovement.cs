@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
 	#endregion
 
 	#region data
-	private PlayerInput Input { get; set; }
+	public PlayerInput Input { get; private set; }
 	private CharacterController controller;
 	#endregion
 
@@ -18,10 +18,13 @@ public class PlayerMovement : MonoBehaviour
 	#region unity events
 	void Awake()
 	{
+
 		// components
 		controller = GetComponent<CharacterController>();
 		Input = GetComponent<PlayerInput>();
-	}
+		Input.actions.Enable();
+
+    }
 	#endregion
 
 	#region inputs
@@ -45,6 +48,10 @@ public class PlayerMovement : MonoBehaviour
 		}
 		else
 		{
+			if(Helpers.Camera == null)
+            {
+				return;
+            }
 			var ray = Helpers.Camera.ScreenPointToRay(input);
 			if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask))
 				return;

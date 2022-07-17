@@ -14,26 +14,14 @@ public class GameOverController : MonoBehaviour
     public int score { get; set; } = 0;
 
 
-    public void deactivate()
-    {
-        this.gameOverScreen.GetComponent<GameObject>().SetActive(false);
-    }
-
-    public void activate()
-    {
-
-        this.gameOverScreen.GetComponent<GameObject>().SetActive(true);
-    }
-
-
     public void showGameOver()
     {
-        this.gameOverScreen.SetActive(true);
+        this.gameOverScreen.gameObject.SetActive(true);
     }
     // Start is called before the first frame update
     void Start()
     {
-
+        Debug.Log(this.tryAgainButton);
         tryAgainButton.GetComponent<Button>().onClick.AddListener(loadLevel);
         goBackToMenuButton.GetComponent<Button>().onClick.AddListener(loadMenu);
 
@@ -47,14 +35,24 @@ public class GameOverController : MonoBehaviour
 
     public void loadLevel()
     {
-        Debug.Log("loading");
+
+        Debug.Log("loadlevel");
+
         SceneManager.LoadScene("Level1");
     }
 
     public void loadMenu()
     {
-        Application.Quit();
-        Debug.Log("MenuScene");
+        Debug.Log("loadMenu");
+        SceneManager.LoadScene("MenuScene");
+
+
+    }
+
+    private void OnDisable()
+    {
+        tryAgainButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        goBackToMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
 
     }
 }
