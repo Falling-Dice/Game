@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
 		if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask))
 			return;
 
-		controller.Aiming = hit.point;
+		controller.SetAiming(hit.point);
 	}
 	#endregion
 }

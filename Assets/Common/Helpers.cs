@@ -20,5 +20,14 @@ public static class Helpers
 		var randomIndex = Random.Range(0, (list.Count()));
 		return list[randomIndex];
 	}
+
+	public static Vector3 ResetY(this Vector3 vector, float y = 0.0f, bool immutable = false)
+	{
+		if (immutable)
+			return new Vector3(vector.x, y, vector.z);
+
+		vector.y = y;
+		return vector;
+	}
 	#endregion
 }

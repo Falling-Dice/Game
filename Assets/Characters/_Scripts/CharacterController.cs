@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
@@ -9,19 +8,21 @@ public class CharacterController : MonoBehaviour
 {
 	#region variables
 	[SerializeField] private float _moveSpeed = 5f;
+	[SerializeField] private float _lookSpeed = 5f;
 	[SerializeField] private DiceRoll _diceRoll;
 	[SerializeField] private float _changeSizeSpeed = 10f;
+	[SerializeField] private Collider _rangeCollider;
 	#endregion
 
 	#region data
 	public CharacterSide Side { get; private set; }
 	public Vector3 Move { get; set; }
-	public Vector3 Aiming { get; set; }
+	public Vector3 Aiming { get; private set; }
 	public Rigidbody Rigibody { get; private set; }
 	public CharacterDash CharacterDash { get; private set; }
+	public bool IsDashing { get; private set; }
 
 	private Vector3 desiredSize;
-	private bool canDash = true;
 	#endregion
 
 
@@ -53,39 +54,44 @@ public class CharacterController : MonoBehaviour
 	}
 	void OnCollisionEnter(Collision collision)
 	{
-		if (!collision.gameObject.TryGetComponent<CharacterController>(out var controller)) return;
+		if (!IsDashing || !collision.gameObject.TryGetComponent<CharacterController>(out var controller)) return;
 
-		// if (collision.gameObject.TryGetComponent<EnemyAgent>(out var agent))
-		// {
-		// 	agent.ToggleAgent(false);
-		// 	Debug.Log(collision.relativeVelocity);
-		// 	var rb = collision.gameObject.GetComponent<Rigidbody>();
-		// 	rb.AddForce(-collision.relativeVelocity * 150);
-		// }
+		var agent = collision.gameObject.GetComponent<EnemyAgent>();
+		if (agent != null)
+			agent.ToggleAgent(false);
 
-		Rigibody.AddForce(collision.relativeVelocity * 50);
+		var direction = collision.contacts[0].point - controller.transform.position;
+		var force = -direction.normalized;
+		force.y = 0;
+		controller.Rigibody.AddForce(force * Rigibody.velocity.magnitude * 2, ForceMode.Impulse);
+		// var time = .4f * Side.Size + .5f;
 	}
-
-	//Vector2 vector = collision.relativeVelocity;
-	//Debug.Log(vector);
-
 	#endregion
 
 	#region methods
+	public void SetAiming(Vector3 aiming, float? lookSpeed = null)
+	{
+		Aiming = aiming;
+		_lookSpeed = lookSpeed ?? _lookSpeed;
+	}
+
 	public void ChangeSide(CharacterSide newSide)
 	{
 		Side = newSide;
 		_diceRoll.Roll(Side);
 		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
 		Rigibody.mass = Side.Size;
+
+		if (_rangeCollider != null)
+			_rangeCollider.transform.localScale = new Vector3(1, 1, Side.Size);
 	}
 
 	public void Dash()
 	{
-		if (!canDash)
+		if (IsDashing)
 			return;
 
-		canDash = false;
+		IsDashing = true;
 		CharacterDash.Dash(Side);
 		var time = .4f * Side.Size + .5f;
 		StartCoroutine(WhenDashing(time));
@@ -101,7 +107,7 @@ public class CharacterController : MonoBehaviour
 
 		// methods
 		void LookAt(Quaternion rotation)
-			=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Side.RotationSpeed * Time.deltaTime);
+			=> transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _lookSpeed * Time.deltaTime);
 	}
 
 	private void HandleMove(Vector3 movePosition)
@@ -113,7 +119,8 @@ public class CharacterController : MonoBehaviour
 	{
 		yield return new WaitForSeconds(timeWait);
 		ChangeSide(CharacterSide.All.PickRandom());
-		canDash = true;
+
+		IsDashing = false;
 	}
 	#endregion
 }
