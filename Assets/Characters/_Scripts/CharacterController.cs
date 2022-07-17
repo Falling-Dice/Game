@@ -69,7 +69,7 @@ public class CharacterController : MonoBehaviour
 
 		var direction = collision.contacts[0].point - controller.transform.position;
 		var force = -direction.normalized.ResetY();
-		controller.Rigibody.AddForce(force * Rigibody.velocity.magnitude * 2, ForceMode.Impulse);
+		controller.Rigibody.AddForce(force * Side.Range * 3, ForceMode.Impulse);
 
 		controller.DiceRoll.Roll(CharacterSide.All.PickRandom());
 	}
