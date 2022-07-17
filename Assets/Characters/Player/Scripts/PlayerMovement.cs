@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 		else
 		{
+			if (Helpers.Camera == null) return;
 			var ray = Helpers.Camera.ScreenPointToRay(input);
 			if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, _aimLayerMask))
 				return;

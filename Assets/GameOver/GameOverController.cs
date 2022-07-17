@@ -6,55 +6,33 @@ using UnityEngine.SceneManagement;
 
 public class GameOverController : MonoBehaviour
 {
-    public GameObject gameOverScreen;
+	public GameObject gameOverScreen;
 
-    public Button tryAgainButton;
-    public Button goBackToMenuButton;
-
-    public int score { get; set; } = 0;
+	public Button tryAgainButton;
+	public Button goBackToMenuButton;
 
 
-    public void deactivate()
-    {
-        this.gameOverScreen.GetComponent<GameObject>().SetActive(false);
-    }
+	public void showGameOver()
+	{
+		this.gameOverScreen.SetActive(true);
+	}
+	// Start is called before the first frame update
+	void Start()
+	{
+		tryAgainButton.onClick.AddListener(loadLevel);
+		goBackToMenuButton.onClick.AddListener(loadMenu);
+	}
 
-    public void activate()
-    {
+	// Update is called once per frame
 
-        this.gameOverScreen.GetComponent<GameObject>().SetActive(true);
-    }
+	public void loadLevel()
+	{
+		Debug.Log("loading");
+		SceneManager.LoadScene("Level1");
+	}
 
-
-    public void showGameOver()
-    {
-        this.gameOverScreen.SetActive(true);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        tryAgainButton.GetComponent<Button>().onClick.AddListener(loadLevel);
-        goBackToMenuButton.GetComponent<Button>().onClick.AddListener(loadMenu);
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void loadLevel()
-    {
-        Debug.Log("loading");
-        SceneManager.LoadScene("Level1");
-    }
-
-    public void loadMenu()
-    {
-        Application.Quit();
-        Debug.Log("MenuScene");
-
-    }
+	public void loadMenu()
+	{
+		SceneManager.LoadScene("MenuScene");
+	}
 }

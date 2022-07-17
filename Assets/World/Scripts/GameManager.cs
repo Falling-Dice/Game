@@ -1,5 +1,7 @@
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,11 +12,13 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private EnemyAgent _enemyPrefab;
 	[SerializeField] private Transform[] _enemiesSpawn;
 	[SerializeField] private GameOverController _gameOverController;
+	[SerializeField] private GameObject _scorePanel;
+	[SerializeField] private TextMeshProUGUI _scoreText;
 
-    [Header("Audios")]
+	[Header("Audios")]
 	[SerializeField] private AudioClip _dieClip;
 	[SerializeField] private float _dieClipVolume = 1f;
-   
+
 
 	#endregion
 
@@ -67,10 +71,12 @@ public class GameManager : MonoBehaviour
 			MainAudioSource.PlayOneShot(_dieClip, _dieClipVolume);
 			Destroy(controller.gameObject);
 			SpawnEnemy();
+			_scoreText.text = $"Score: {Score}";
 		}
 		else
 		{
-			Debug.Log("tombé");
+			Debug.Log("tombï¿½");
+			_scorePanel.SetActive(false);
 			this._gameOverController.showGameOver();
 		}
 	}
