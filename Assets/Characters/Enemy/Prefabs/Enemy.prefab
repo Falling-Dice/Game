@@ -100,7 +100,11 @@ MonoBehaviour:
   _rangeCollider: {fileID: 8180769938345063714}
   _zone: {fileID: 8506551577732243133}
   _dashClip: {fileID: 8300000, guid: 4546b087c6a23f959963b0684e725552, type: 3}
-  _dashClipVolume: 0.6
+  _dashClipVolume: 1
+  _sideChangeClip: {fileID: 8300000, guid: 4546b087c6a23f959963b0684e725552, type: 3}
+  _sideChangeClipVolume: 1
+  _sideChangeSizeClip: {fileID: 8300000, guid: b6c291ec9a95baf1daa0773543076a52, type: 3}
+  _sideChangeClipSizeVolume: 1
 --- !u!114 &8180769938163478918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,8 +130,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0
