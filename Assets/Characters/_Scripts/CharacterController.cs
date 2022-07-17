@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CharacterDash))]
+[RequireComponent(typeof(AudioSource))]
 public class CharacterController : MonoBehaviour
 {
 	#region variables
@@ -12,6 +13,11 @@ public class CharacterController : MonoBehaviour
 	[SerializeField] private DiceRoll _diceRoll;
 	[SerializeField] private float _changeSizeSpeed = 10f;
 	[SerializeField] private Collider _rangeCollider;
+	[SerializeField] private Transform _zone;
+
+	[Header("Audios")]
+	[SerializeField] private AudioClip _dashClip;
+	[SerializeField] private float _dashClipVolume = 1.0f;
 	#endregion
 
 	#region data
@@ -21,10 +27,10 @@ public class CharacterController : MonoBehaviour
 	public Rigidbody Rigibody { get; private set; }
 	public CharacterDash CharacterDash { get; private set; }
 	public DiceRoll DiceRoll { get; private set; }
+	public AudioSource AudioSource { get; private set; }
 	public bool IsDashing { get; private set; }
 
 	private Vector3 desiredSize;
-	public Transform zone;
 	#endregion
 
 
@@ -34,6 +40,7 @@ public class CharacterController : MonoBehaviour
 		// components
 		Rigibody = GetComponent<Rigidbody>();
 		CharacterDash = GetComponent<CharacterDash>();
+		AudioSource = GetComponent<AudioSource>();
 
 		DiceRoll = _diceRoll;
 	}
@@ -80,14 +87,14 @@ public class CharacterController : MonoBehaviour
 		Side = newSide;
 		DiceRoll.Roll(Side);
 		desiredSize = new Vector3(Side.Size, Side.Size, Side.Size);
-		Rigibody.mass = Side.Size;
+		// Rigibody.mass = Side.Size;
 
 		if (_rangeCollider != null)
 			_rangeCollider.transform.localScale = new Vector3(1, 1, Side.Size);
 
-		zone.localScale = new Vector3(Side.Range, Side.Range, zone.localScale.z);
+		_zone.localScale = new Vector3(Side.Range, Side.Range, _zone.localScale.z);
 		ColorUtility.TryParseHtmlString(Side.Color, out var newColor);
-		zone.GetComponent<Renderer>().material.color = newColor;
+		_zone.GetComponent<Renderer>().material.color = newColor;
 	}
 
 	public void Dash()
@@ -95,6 +102,7 @@ public class CharacterController : MonoBehaviour
 		if (IsDashing)
 			return;
 
+		AudioSource.PlayOneShot(_dashClip, _dashClipVolume);
 		IsDashing = true;
 		CharacterDash.Dash(Side);
 		var time = .4f * Side.Size + .5f;
