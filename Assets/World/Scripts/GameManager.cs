@@ -9,10 +9,13 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private int numberEnemies;
 	[SerializeField] private EnemyAgent _enemyPrefab;
 	[SerializeField] private Transform[] _enemiesSpawn;
+	[SerializeField] private GameOverController _gameOverController;
 
-	[Header("Audios")]
+    [Header("Audios")]
 	[SerializeField] private AudioClip _dieClip;
 	[SerializeField] private float _dieClipVolume = 1f;
+   
+
 	#endregion
 
 	#region singleton
@@ -67,7 +70,8 @@ public class GameManager : MonoBehaviour
 		}
 		else
 		{
-			// TODO: launch game over screen
+			Debug.Log("tombé");
+			this._gameOverController.showGameOver();
 		}
 	}
 	#endregion

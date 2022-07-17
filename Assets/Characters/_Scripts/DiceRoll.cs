@@ -27,38 +27,3 @@ public class DiceRoll : MonoBehaviour
 	}
 	#endregion
 }
-
-[CustomEditor(typeof(DiceRoll))]
-public class RollsInspector : Editor
-{
-	public override void OnInspectorGUI()
-	{
-		DrawDefaultInspector();
-
-		var rolls = (DiceRoll)target;
-		if (GUILayout.Button("Roll"))
-		{
-			switch (Random.Range(1, 7))
-			{
-				case 1:
-					rolls.Roll(CharacterSide.One);
-					break;
-				case 2:
-					rolls.Roll(CharacterSide.Two);
-					break;
-				case 3:
-					rolls.Roll(CharacterSide.Three);
-					break;
-				case 4:
-					rolls.Roll(CharacterSide.Four);
-					break;
-				case 5:
-					rolls.Roll(CharacterSide.Five);
-					break;
-				case 6:
-					rolls.Roll(CharacterSide.Six);
-					break;
-			}
-		}
-	}
-}
