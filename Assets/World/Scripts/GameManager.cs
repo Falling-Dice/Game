@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
 		{
 			Debug.Log("tomb�");
 			_scorePanel.SetActive(false);
-			this._gameOverController.showGameOver();
+			this._gameOverController.showGameOver(Score);
 		}
 	}
 	#endregion

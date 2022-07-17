@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameOverController : MonoBehaviour
 {
@@ -10,11 +11,13 @@ public class GameOverController : MonoBehaviour
 
 	public Button tryAgainButton;
 	public Button goBackToMenuButton;
+	public TextMeshProUGUI scoreText;
 
 
-	public void showGameOver()
+	public void showGameOver(int score)
 	{
 		this.gameOverScreen.SetActive(true);
+		scoreText.text = $"{score} Score";
 	}
 	// Start is called before the first frame update
 	void Start()
