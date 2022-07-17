@@ -24,6 +24,7 @@ public class CharacterController : MonoBehaviour
 	public bool IsDashing { get; private set; }
 
 	private Vector3 desiredSize;
+	public Transform zone;
 	#endregion
 
 
@@ -83,6 +84,14 @@ public class CharacterController : MonoBehaviour
 
 		if (_rangeCollider != null)
 			_rangeCollider.transform.localScale = new Vector3(1, 1, Side.Size);
+		this.zone.localScale = new Vector3(Side.Range, Side.Range, zone.localScale.z);
+
+		Color newColor;
+		ColorUtility.TryParseHtmlString(Side.Color, out newColor);
+		Debug.Log(newColor);
+		this.zone.GetComponent<Renderer>().material.color = newColor;
+		//this.Zone.GetComponent<MeshRenderer>().material = new Material(Shader.Find());
+
 	}
 
 	public void Dash()
