@@ -18,6 +18,12 @@ public class CharacterController : MonoBehaviour
 	[Header("Audios")]
 	[SerializeField] private AudioClip _dashClip;
 	[SerializeField] private float _dashClipVolume = 1.0f;
+	[SerializeField] private AudioClip _sideChangeClip;
+	[SerializeField] private float _sideChangeClipVolume = 1.0f;
+	[SerializeField] private AudioClip _sideChangeSizeClip;
+	[SerializeField] private float _sideChangeClipSizeVolume = 1.0f;
+	[SerializeField] private AudioClip _collisionClip;
+	[SerializeField] private float _collisionClipVolume = 1.0f;
 	#endregion
 
 	#region data
@@ -72,6 +78,9 @@ public class CharacterController : MonoBehaviour
 		controller.Rigibody.AddForce(force * Side.Range * 3, ForceMode.Impulse);
 
 		controller.DiceRoll.Roll(CharacterSide.All.PickRandom());
+
+		// audio
+		AudioSource.PlayOneShot(_collisionClip, _collisionClipVolume);
 	}
 	#endregion
 
@@ -95,6 +104,9 @@ public class CharacterController : MonoBehaviour
 		_zone.localScale = new Vector3(Side.Range, Side.Range, _zone.localScale.z);
 		ColorUtility.TryParseHtmlString(Side.Color, out var newColor);
 		_zone.GetComponent<Renderer>().material.color = newColor;
+
+		// audio
+		AudioSource.PlayOneShot(_sideChangeClip, _sideChangeClipVolume);
 	}
 
 	public void Dash()

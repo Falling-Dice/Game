@@ -240,13 +240,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b16c2fad0fc514773a9d73adce9e348e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
+  _moveSpeed: 15
   _lookSpeed: 5
   _diceRoll: {fileID: 2595258752218982405}
   _changeSizeSpeed: 10
   _rangeCollider: {fileID: 0}
   _zone: {fileID: 2562142917718138503}
   _dashClip: {fileID: 8300000, guid: 4546b087c6a23f959963b0684e725552, type: 3}
+  _dashClipVolume: 1
+  _sideChangeClip: {fileID: 8300000, guid: c412264439c7ff13387f439d1d779c51, type: 3}
+  _sideChangeClipVolume: 1
+  _sideChangeSizeClip: {fileID: 8300000, guid: b6c291ec9a95baf1daa0773543076a52, type: 3}
+  _sideChangeClipSizeVolume: 1
 --- !u!82 &329067609
 AudioSource:
   m_ObjectHideFlags: 0
@@ -258,7 +263,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
