@@ -47,7 +47,7 @@ Distributed under the MIT License. See [`LICENSE`](https://github.com/Falling-Di
 
 <div align="center">
 
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiv1L_wp4L5AhVrgM4BHc6ZBmsQFnoECAYQAQ&url=https%3A%2F%2Ffr.linkedin.com%2Fin%2Fdam-no&usg=AOvVaw1K1U0dOnSFEhUJ9Pw7V8Yc)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/dam-no)
 
 </div>
 
