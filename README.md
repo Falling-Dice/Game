@@ -2,15 +2,15 @@
 
 [![MIT License](https://img.shields.io/github/license/Falling-Dice/Game.svg?style=for-the-badge)](https://github.com/Falling-Dice/Game/blob/master/LICENSE)
 
+## Download
+
+You can download the game [here](https://krinest.itch.io/falling-dice#download).
+
 ## Description
 
 You are on a platform which is surrounded by void. The objective is to make the biggest score.
 
 You can earn points by knocking enemies off the plateform with your dash. The dash's power depends on the number on the top of the dice. The higher the number, the more powerful it is.
-
-## Description
-
-You can download the game [here](https://krinest.itch.io/falling-dice#download).
 
 ## ScreenShots
 
